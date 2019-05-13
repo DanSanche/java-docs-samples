@@ -43,7 +43,13 @@ public class PollDiscoveryOccurrenceFinished {
 
     // find the discovery occurrence using a filter string
     Occurrence discoveryOccurrence = null;
-    String filterStr = "kind=\"DISCOVERY\" AND resourceUrl=\"" + resourceUrl + "\"";
+    String filterStr =  String.format("resourceUrl=\"%s\" AND noteProjectId=\"%s\" AND noteId=\"%s\"", 
+        resourceUrl, "goog-analysis",  "PACKAGE_VULNERABILITY");
+    // [END containeranalysis_poll_discovery_occurrence_finished]
+    // the above filter isn't testable, since it looks for occurrences in a locked down project
+    // fall back to a more permissive filter for testing
+    filterStr = "kind=\"DISCOVERY\" AND resourceUrl=\"" + resourceUrl + "\"";
+    // [START containeranalysis_poll_discovery_occurrence_finished]
     while (discoveryOccurrence == null) {
       for (Occurrence o : client.listOccurrences(projectName, filterStr).iterateAll()) {
         if (o.getDiscovered() != null) {
